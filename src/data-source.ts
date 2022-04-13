@@ -7,10 +7,10 @@ const dataSource = new DataSource({
   username: 'postgres',
   password: '',
   database: 'nestjs_ecom_integration_development',
-  entities: ['src/entities/*.entity.ts'],
+  entities: ['./src/shopee/entities/*.entity.ts'],
   synchronize: true,
-  // logNotifications: true,
-  // migrations: ['src/migrations/*.{js,ts}'],
+  logging: true,
+  migrations: ['./src/migrations/*.ts'],
 });
 
 export default dataSource;

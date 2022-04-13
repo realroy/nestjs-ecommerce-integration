@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
-import { BaseEntity } from './base';
+import { Column, Entity } from 'typeorm';
+
+import { BaseEntity } from './base.entity';
 
 @Entity({ name: 'shopee_shop' })
 export class ShopEntity extends BaseEntity {
