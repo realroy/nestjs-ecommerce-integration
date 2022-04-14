@@ -14,6 +14,7 @@ import * as shopeeEntities from './shopee/entities';
     TypeOrmModule.forRoot({
       ...dataSourceOption,
       entities: [...Object.values(shopeeEntities)],
+      synchronize: false,
       migrations: [],
     }),
     ShopeeModule.register({
