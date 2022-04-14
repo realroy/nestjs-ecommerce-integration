@@ -8,5 +8,8 @@ export class ShopEntity extends BaseEntity {
   code: string;
 
   @Column()
+  partnerId: string;
+
+  @Column({ unique: true })
   shopId: string;
 }

@@ -1,6 +1,6 @@
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
-const dataSource = new DataSource({
+export const dataSourceOption: DataSourceOptions = {
   type: 'postgres',
   host: 'localhost',
   port: 5432,
@@ -11,6 +11,8 @@ const dataSource = new DataSource({
   synchronize: true,
   logging: true,
   migrations: ['./src/migrations/*.ts'],
-});
+};
+
+const dataSource = new DataSource(dataSourceOption);
 
 export default dataSource;

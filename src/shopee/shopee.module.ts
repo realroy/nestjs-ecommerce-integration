@@ -1,18 +1,21 @@
 import { DynamicModule, Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
+
+import { ShopeeConfig } from './shopee.config';
 
 import * as services from './services';
-import { ShopeeConfig } from './shopee.config';
-import { ShopsController } from './controllers/shops/shops.controller';
-import { ShopsService } from './services/shops/shops.service';
+import * as controllers from './controllers';
+import * as entities from './entities';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-@Module({
-  controllers: [ShopsController],
-  providers: [ShopsService]
-})
+@Module({})
 export class ShopeeModule {
   static register(config?: ShopeeConfig): DynamicModule {
     return {
-      imports: [],
+      imports: [
+        HttpModule.register({}),
+        TypeOrmModule.forFeature(Object.values(entities)),
+      ],
       module: ShopeeModule,
       providers: [
         {
@@ -21,7 +24,7 @@ export class ShopeeModule {
         },
         ...Object.values(services),
       ],
-      controllers: [],
+      controllers: [...Object.values(controllers)],
     };
   }
 }
