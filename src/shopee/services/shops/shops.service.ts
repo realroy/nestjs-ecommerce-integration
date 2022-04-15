@@ -9,6 +9,7 @@ export class ShopsService {
     @InjectRepository(ShopEntity)
     private shopRepository: Repository<ShopEntity>,
   ) {}
+
   getMany() {
     return this.shopRepository.find({});
   }

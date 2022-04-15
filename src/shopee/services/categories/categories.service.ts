@@ -7,34 +7,27 @@ import { Repository } from 'typeorm';
 
 import { BaseService } from '../base/base.service';
 import { ConfigService } from '../config.service';
+import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
-export class CategoriesService extends BaseService {
+export class CategoriesService extends TokensService {
   constructor(
     protected readonly configService: ConfigService,
-    private readonly httpService: HttpService,
+    protected readonly httpService: HttpService,
 
     @InjectRepository(TokenEntity)
-    private tokenRepository: Repository<TokenEntity>,
+    protected tokenRepository: Repository<TokenEntity>,
   ) {
-    super(configService);
+    super(configService, httpService, tokenRepository);
   }
 
   async getCategories(shopId: string) {
     const path = '/api/v2/product/get_category';
-    const tokens = await this.tokenRepository.find({
-      take: 1,
-      order: { updatedAt: 'DESC' },
-    });
-
-    const { accessToken } = tokens[0];
-
+    const accessToken = await this.getAccessToken(shopId);
     const url = this.createSignedUrl(path, {
       access_token: accessToken,
       shop_id: shopId,
     });
-
-    console.log({ url });
 
     const { data } = await firstValueFrom(this.httpService.get(url));
 

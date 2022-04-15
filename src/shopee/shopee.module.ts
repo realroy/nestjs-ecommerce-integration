@@ -1,12 +1,13 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Module, ValidationPipe } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_PIPE } from '@nestjs/core';
 
 import { ShopeeConfig } from './shopee.config';
-
+import { TokensService } from './services/tokens/tokens.service';
 import * as services from './services';
 import * as controllers from './controllers';
 import * as entities from './entities';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({})
 export class ShopeeModule {
@@ -21,6 +22,10 @@ export class ShopeeModule {
         {
           provide: 'CONFIG',
           useValue: config,
+        },
+        {
+          provide: APP_PIPE,
+          useClass: ValidationPipe,
         },
         ...Object.values(services),
       ],

@@ -61,7 +61,7 @@ export class CallbackService {
       throw new Error(data.error + data.message);
     }
 
-    await this.tokenRepository
+    const token = await this.tokenRepository
       .createQueryBuilder()
       .insert()
       .into(TokenEntity)
@@ -73,6 +73,6 @@ export class CallbackService {
       })
       .execute();
 
-    return {};
+    return token;
   }
 }

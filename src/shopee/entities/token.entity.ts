@@ -14,4 +14,8 @@ export class TokenEntity extends BaseEntity {
 
   @Column()
   partnerId: string;
+
+  get isExpired() {
+    return this.expiredAt <= new Date();
+  }
 }
