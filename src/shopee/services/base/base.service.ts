@@ -5,7 +5,7 @@ import { generateHmac, generateTimestamp } from '../utils';
 export class BaseService {
   constructor(protected readonly configService: ConfigService) {}
 
-  createSignedUrl(path: string) {
+  createSignedUrl(path: string, additionalParams: Record<string, string> = {}) {
     const partnerId = this.configService.get('partnerId');
 
     const timestamp = generateTimestamp();
@@ -14,11 +14,13 @@ export class BaseService {
     url.search = new URLSearchParams({
       partner_id: partnerId,
       timestamp,
+      ...additionalParams,
       sign: generateHmac(
         this.configService.get('partnerKey'),
         partnerId,
         path,
         timestamp,
+        ...Object.values(additionalParams),
       ),
     }).toString();
 

@@ -7,8 +7,6 @@ import * as services from './services';
 import * as controllers from './controllers';
 import * as entities from './entities';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MediaSpaceController } from './controllers/media-space/media-space.controller';
-import { MediaSpaceService } from './services/media-space/media-space.service';
 
 @Module({})
 export class ShopeeModule {
