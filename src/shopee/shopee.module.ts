@@ -4,15 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_PIPE } from '@nestjs/core';
 
 import { ShopeeConfig } from './shopee.config';
-import { AttributesService } from './services/attributes/attributes.service';
-import { AttributesController } from './controllers/attributes/attributes.controller';
 import * as services from './services';
 import * as controllers from './controllers';
 import * as entities from './entities';
 
-@Module({
-  controllers: [AttributesController]
-})
+@Module({})
 export class ShopeeModule {
   static register(config?: ShopeeConfig): DynamicModule {
     return {
