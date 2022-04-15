@@ -32,13 +32,10 @@ export class BrandsService extends TokensService {
     language?: string,
   ) {
     const path = '/api/v2/product/get_brand_list';
-    const accessToken = await this.getAccessToken(shopId);
-    const url = this.createSignedUrlWithAccessToken(
+    const url = await this.createSignedUrlWithAccessToken(
       path,
-      accessToken,
       shopId.toString(),
       {
-        access_token: accessToken,
         shop_id: shopId.toString(),
         offset,
         page_size: pageSize,

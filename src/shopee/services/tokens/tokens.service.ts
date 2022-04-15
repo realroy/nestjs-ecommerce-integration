@@ -21,7 +21,7 @@ export class TokensService extends BaseService {
     super(configService);
   }
 
-  async getAccessToken(shopId: string | number) {
+  protected async getAccessToken(shopId: string | number) {
     const tokens = await this.tokenRepository.find({
       take: 1,
       order: { updatedAt: 'DESC' },
@@ -40,21 +40,22 @@ export class TokensService extends BaseService {
     return accessToken;
   }
 
-  createSignedUrlWithAccessToken(
+  protected async createSignedUrlWithAccessToken(
     path: string,
-    accessToken: string,
     shopId: string,
     additionalParams: Record<string, string | number> = {},
   ) {
     const partnerId = this.configService.get('partnerId');
+    const partnerKey = this.configService.get('partnerKey');
 
+    const accessToken = await this.getAccessToken(shopId);
     const timestamp = generateTimestamp();
 
     const url = new URL(path, this.configService.get('baseUrl'));
-    const partnerKey = this.configService.get('partnerKey');
     url.search = new URLSearchParams({
       partner_id: partnerId,
       timestamp,
+      access_token: accessToken,
       ...additionalParams,
       sign: generateHmac(
         partnerKey,

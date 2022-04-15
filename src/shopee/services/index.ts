@@ -8,3 +8,4 @@ export * from './shops/shops.service';
 export * from './brands/brands.service';
 export * from './tokens/tokens.service';
 export * from './days-to-ship/days-to-ship.service';
+export * from './attributes/attributes.service';

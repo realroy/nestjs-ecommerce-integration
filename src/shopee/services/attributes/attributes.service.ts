@@ -3,12 +3,13 @@ import { firstValueFrom } from 'rxjs';
 import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
-export class DaysToShipService extends TokensService {
-  async getLimit(shopId: string, categoryId: string) {
-    const path = '/api/v2/product/get_dts_limit';
+export class AttributesService extends TokensService {
+  async getAttributes(shopId: string, categoryId: string) {
+    const path = '/api/v2/product/get_attributes';
+
     const url = await this.createSignedUrlWithAccessToken(path, shopId, {
-      shop_id: shopId,
       category_id: categoryId,
+      shop_id: shopId,
     });
 
     const { data } = await firstValueFrom(this.httpService.get(url));
