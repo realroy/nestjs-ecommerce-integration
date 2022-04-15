@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_PIPE } from '@nestjs/core';
 
 import { ShopeeConfig } from './shopee.config';
-import { TokensService } from './services/tokens/tokens.service';
 import * as services from './services';
 import * as controllers from './controllers';
 import * as entities from './entities';

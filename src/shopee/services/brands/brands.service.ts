@@ -47,8 +47,6 @@ export class BrandsService extends TokensService {
       },
     );
 
-    console.log({ url });
-
     const { data } = await firstValueFrom(this.httpService.get(url));
     return data;
   }

@@ -4,3 +4,4 @@ export * from './callback/callback.controller';
 export * from './media-space/media-space.controller';
 export * from './categories/categories.controller';
 export * from './brands/brands.controller';
+export * from './days-to-ship/days-to-ship.controller';
