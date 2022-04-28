@@ -8,3 +8,4 @@ export * from './days-to-ship/days-to-ship.controller';
 export * from './attributes/attributes.controller';
 export * from './logistics-channels/logistics-channels.controller';
 export * from './products-size-chart/products-size-chart.controller';
+export * from './products/products.controller';

@@ -5,7 +5,7 @@ import { generateHmac, generateTimestamp } from '../utils';
 export class BaseService {
   constructor(protected readonly configService: ConfigService) {}
 
-  createSignedUrl(
+  protected createSignedUrl(
     path: string,
     additionalParams: Record<string, string | number> = {},
   ) {

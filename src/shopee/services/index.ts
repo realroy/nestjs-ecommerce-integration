@@ -11,3 +11,4 @@ export * from './days-to-ship/days-to-ship.service';
 export * from './attributes/attributes.service';
 export * from './logistics-channels/logistics-channels.service';
 export * from './products-size-chart/products-size-chart.service';
+export * from './products/products.service';
