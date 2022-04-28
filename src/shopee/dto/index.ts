@@ -5,3 +5,5 @@ export * from './get-days-to-ship-query.dto';
 export * from './get-support-size-chart-query.dto';
 export * from './add-items-body.dto';
 export * from './update-logistic-channel-body.dto';
+export * from './delete-item-body.dto';
+export * from './update-item-body.dto';
