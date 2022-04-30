@@ -21,6 +21,10 @@ export class ShopeeModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(ShopIdMiddleware)
+      .exclude(
+        { path: '/auth-partner', method: RequestMethod.ALL },
+        { path: '/callback', method: RequestMethod.ALL },
+      )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 

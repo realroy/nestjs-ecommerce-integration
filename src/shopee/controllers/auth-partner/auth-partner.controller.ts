@@ -8,14 +8,14 @@ export class AuthPartnerController {
 
   @Get()
   async authPartner() {
-    const url = await this.service.getAuthPartnerUrl();
+    const url = this.service.getAuthPartnerUrl();
 
     return { url };
   }
 
   @Get('cancel')
   async cancelAuthPartner() {
-    const url = await this.service.getCancelAuthPartnerUrl();
+    const url = this.service.getCancelAuthPartnerUrl();
 
     return { url };
   }

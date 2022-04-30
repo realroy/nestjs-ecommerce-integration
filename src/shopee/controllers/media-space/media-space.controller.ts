@@ -6,6 +6,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthorizedRequest } from 'src/shopee/dto';
 import { MediaSpaceService } from 'src/shopee/services';
 
 @Controller('media-space')
@@ -14,7 +15,10 @@ export class MediaSpaceController {
 
   @Post('upload-image')
   @UseInterceptors(FileInterceptor('image'))
-  async uploadImage(@Req() req, @UploadedFile() image: Express.Multer.File) {
+  async uploadImage(
+    @Req() req: AuthorizedRequest,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
     const newImage = await this.service.uploadImage(image, req.shopId);
 
     return newImage.data;

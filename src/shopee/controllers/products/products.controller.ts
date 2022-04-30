@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import {
   AddItemsBodyDto,
+  AuthorizedRequest,
   DeleteItemBodyDto,
   UpdateItemsBodyDto,
 } from 'src/shopee/dto';
@@ -19,22 +20,25 @@ export class ProductsController {
   constructor(private readonly service: ProductsService) {}
 
   @Post()
-  async create(@Req() req, @Body() dto: AddItemsBodyDto) {
+  async create(@Req() req: AuthorizedRequest, @Body() dto: AddItemsBodyDto) {
     return this.service.addItem({ ...dto, shopId: req.shopId });
   }
 
   @Put()
-  async update(@Req() req, @Body() dto: UpdateItemsBodyDto) {
+  async update(@Req() req: AuthorizedRequest, @Body() dto: UpdateItemsBodyDto) {
     return this.service.updateItem({ ...dto, shopId: req.shopId });
   }
 
   @Patch()
-  async updatePartial(@Req() req, @Body() dto: UpdateItemsBodyDto) {
+  async updatePartial(
+    @Req() req: AuthorizedRequest,
+    @Body() dto: UpdateItemsBodyDto,
+  ) {
     return this.service.updateItem({ ...dto, shopId: req.shopId });
   }
 
   @Delete()
-  async delete(@Req() req, @Body() dto: DeleteItemBodyDto) {
+  async delete(@Req() req: AuthorizedRequest, @Body() dto: DeleteItemBodyDto) {
     return this.service.deleteItem({ ...dto, shopId: req.shopId });
   }
 }

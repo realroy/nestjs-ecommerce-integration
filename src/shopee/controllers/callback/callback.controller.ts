@@ -1,17 +1,15 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { CallbackService } from 'src/shopee/services/callback/callback.service';
+
+import { CallBackQueryDto } from 'src/shopee/dto';
+import { CallbackService } from 'src/shopee/services';
 
 @Controller('callback')
 export class CallbackController {
   constructor(private readonly service: CallbackService) {}
 
   @Get()
-  async callback(
-    @Query('code') code: string,
-    @Query('shop_id') shopId: string | null,
-    @Query('main_account_id') mainAccountId: string,
-  ) {
-    const res = await this.service.createOrUpdateShopSession(code, shopId);
+  async callback(@Query() query: CallBackQueryDto) {
+    await this.service.createOrUpdateShopSession(query.code, query.shopId);
 
     return { message: 'success' };
   }

@@ -66,7 +66,6 @@ export class TokensService extends BaseService {
   }
 
   private async renewRefreshToken(shopId: string, refreshToken: string) {
-    console.log('renewRefreshToken');
     const [partnerId, partnerKey, baseUrl] = [
       'partnerId',
       'partnerKey',
@@ -88,8 +87,6 @@ export class TokensService extends BaseService {
       timestamp,
       sign: generateHmac(partnerKey, partnerId, path, timestamp),
     }).toString();
-
-    console.log({ url: url.toString() });
 
     const { data } = await firstValueFrom(
       this.httpService.post(url.toString(), body),
