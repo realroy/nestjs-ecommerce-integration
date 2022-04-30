@@ -1,4 +1,11 @@
-import { DynamicModule, Module, ValidationPipe } from '@nestjs/common';
+import {
+  DynamicModule,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+  ValidationPipe,
+} from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_PIPE } from '@nestjs/core';
@@ -7,9 +14,16 @@ import { ShopeeConfig } from './shopee.config';
 import * as services from './services';
 import * as controllers from './controllers';
 import * as entities from './entities';
+import { ShopIdMiddleware } from './middlewares';
 
 @Module({})
-export class ShopeeModule {
+export class ShopeeModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(ShopIdMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+
   static register(config?: ShopeeConfig): DynamicModule {
     return {
       imports: [

@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Req } from '@nestjs/common';
 import { GetBrandsQueryDto } from 'src/shopee/dto';
 import { BrandsService } from 'src/shopee/services';
 
@@ -7,9 +7,9 @@ export class BrandsController {
   constructor(private readonly service: BrandsService) {}
 
   @Get()
-  getBrands(@Query() query: GetBrandsQueryDto) {
+  getBrands(@Req() req, @Query() query: GetBrandsQueryDto) {
     return this.service.getBrands(
-      query.shopId,
+      req.shopId,
       query.pageSize,
       query.categoryId,
       query.offset,

@@ -27,7 +27,6 @@ export class TokensService extends BaseService {
       order: { updatedAt: 'DESC' },
     });
     const [token] = tokens;
-
     if (!token.isExpired) {
       return token?.accessToken;
     }

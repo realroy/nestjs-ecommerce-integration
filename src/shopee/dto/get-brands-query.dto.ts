@@ -4,9 +4,6 @@ import { GetBrandsStatusEnum } from '../enums';
 
 export class GetBrandsQueryDto {
   @IsNumberString()
-  shopId: string;
-
-  @IsNumberString()
   pageSize: string;
 
   @IsNumberString()

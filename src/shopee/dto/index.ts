@@ -7,3 +7,5 @@ export * from './add-items-body.dto';
 export * from './update-logistic-channel-body.dto';
 export * from './delete-item-body.dto';
 export * from './update-item-body.dto';
+export * from 'src/shopee/dto/create-tier-variation-body.dto';
+export * from 'src/shopee/dto/update-tier-variation-body.dto';
