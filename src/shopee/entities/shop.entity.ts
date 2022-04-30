@@ -1,6 +1,7 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 import { BaseEntity } from './base.entity';
+import { ImageEntity } from './image.entity';
 
 @Entity({ name: 'shopee_shop' })
 export class ShopEntity extends BaseEntity {
@@ -12,4 +13,7 @@ export class ShopEntity extends BaseEntity {
 
   @Column({ unique: true })
   shopId: string;
+
+  @OneToMany(() => ImageEntity, (image) => image.shop)
+  images: ImageEntity[];
 }

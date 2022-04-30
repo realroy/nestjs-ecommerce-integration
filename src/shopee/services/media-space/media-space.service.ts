@@ -52,8 +52,8 @@ export class MediaSpaceService extends BaseService {
     const newImage = new ImageEntity();
     const { image_info = {} } = data.response ?? {};
 
-    newImage.imageId = image_info?.image_id ?? {};
-    newImage.imageUrlList = image_info?.image_url_list ?? {};
+    newImage.id = image_info?.image_id;
+    newImage.data = data.response ?? {};
 
     await this.imageRepository.create(newImage);
 

@@ -26,7 +26,13 @@ export class TokensService extends BaseService {
       take: 1,
       order: { updatedAt: 'DESC' },
     });
+
     const [token] = tokens;
+
+    if (!token) {
+      throw new Error('token is not found');
+    }
+
     if (!token.isExpired) {
       return token?.accessToken;
     }
