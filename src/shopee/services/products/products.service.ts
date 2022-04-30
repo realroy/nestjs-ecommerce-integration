@@ -1,29 +1,15 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
 import {
   AddItemsBodyDto,
   DeleteItemBodyDto,
   UpdateItemsBodyDto,
 } from 'src/shopee/dto';
-import { ProductEntity, TokenEntity } from 'src/shopee/entities';
-import { Repository } from 'typeorm';
-import { ConfigService } from '../config.service';
+import { ProductEntity } from 'src/shopee/entities';
 import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
 export class ProductsService extends TokensService {
-  constructor(
-    protected readonly configService: ConfigService,
-    protected readonly httpService: HttpService,
-    @InjectRepository(TokenEntity)
-    protected tokenRepository: Repository<TokenEntity>,
-    @InjectRepository(ProductEntity)
-    private productRepository: Repository<ProductEntity>,
-  ) {
-    super(configService, httpService, tokenRepository);
-  }
   async addItem(dto: AddItemsBodyDto & { shopId: string }) {
     const path = '/api/v2/product/add_item';
     const url = await this.createSignedUrlWithAccessToken(
@@ -191,13 +177,18 @@ export class ProductsService extends TokensService {
 
     const { data } = await firstValueFrom(this.httpService.post(url, body));
 
+    if (data.error.length) {
+      throw new Error([data.error, data.message].join(' '));
+    }
+
     const product = new ProductEntity();
-    product.id = data.response.item_id;
-    product.data = data.response;
+    product.id = data?.response?.item_id;
+    product.data = data?.response;
+    product.sku = data?.response?.item_sku;
 
-    await this.productRepository.create(product);
+    await product.save();
 
-    return data;
+    return product;
   }
 
   async updateItem(dto: UpdateItemsBodyDto & { shopId: string }) {
@@ -366,10 +357,15 @@ export class ProductsService extends TokensService {
 
     const { data } = await firstValueFrom(this.httpService.post(url, body));
 
+    if (data.error.length) {
+      throw new Error([data.error, data.message].join(' '));
+    }
+
     const product = new ProductEntity();
+    product.id = dto.itemId.toString();
     product.data = data.response;
 
-    await this.productRepository.update({ id: dto.itemId.toString() }, product);
+    await product.save();
 
     return data;
   }
@@ -388,7 +384,11 @@ export class ProductsService extends TokensService {
 
     const { data } = await firstValueFrom(this.httpService.post(url, body));
 
-    await this.productRepository.delete({ id: dto.itemId.toString() });
+    if (data.error.length) {
+      throw new Error([data.error, data.message].join(' '));
+    }
+
+    await ProductEntity.delete({ id: dto.itemId.toString() });
 
     return data;
   }

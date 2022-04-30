@@ -1,37 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { HttpService } from '@nestjs/axios';
-import { InjectRepository } from '@nestjs/typeorm';
+import { firstValueFrom } from 'rxjs';
 
 import { ConfigService } from '../config.service';
 import { BaseService } from '../base/base.service';
 import { TokenEntity } from 'src/shopee/entities';
 import { generateHmac, generateTimestamp } from '../utils';
-import { firstValueFrom } from 'rxjs';
+import { ShopeeConfig } from 'src/shopee/shopee.config';
 
 @Injectable()
 export class TokensService extends BaseService {
   constructor(
     protected readonly configService: ConfigService,
     protected readonly httpService: HttpService,
-
-    @InjectRepository(TokenEntity)
-    protected tokenRepository: Repository<TokenEntity>,
   ) {
     super(configService);
   }
 
-  protected async getAccessToken(shopId: string | number) {
-    const tokens = await this.tokenRepository.find({
-      take: 1,
-      order: { updatedAt: 'DESC' },
-    });
-
-    const [token] = tokens;
-
-    if (!token) {
-      throw new Error('token is not found');
-    }
+  protected async getAccessToken(shopId: string) {
+    const token = await TokenEntity.findOneOrFail({ where: { shopId } });
 
     if (!token.isExpired) {
       return token?.accessToken;
@@ -50,13 +37,16 @@ export class TokensService extends BaseService {
     shopId: string,
     additionalParams: Record<string, string | number> = {},
   ) {
-    const partnerId = this.configService.get('partnerId');
-    const partnerKey = this.configService.get('partnerKey');
+    const [partnerId, partnerKey, baseUrl] = [
+      'partnerId',
+      'partnerKey',
+      'baseUrl',
+    ].map((key: keyof ShopeeConfig) => this.configService.get(key));
 
     const accessToken = await this.getAccessToken(shopId);
     const timestamp = generateTimestamp();
 
-    const url = new URL(path, this.configService.get('baseUrl'));
+    const url = new URL(path, baseUrl);
     url.search = new URLSearchParams({
       partner_id: partnerId,
       timestamp,
@@ -75,12 +65,13 @@ export class TokensService extends BaseService {
     return url.toString();
   }
 
-  private async renewRefreshToken(
-    shopId: string | number,
-    refreshToken: string,
-  ) {
+  private async renewRefreshToken(shopId: string, refreshToken: string) {
     console.log('renewRefreshToken');
-    const partnerId = this.configService.get('partnerId');
+    const [partnerId, partnerKey, baseUrl] = [
+      'partnerId',
+      'partnerKey',
+      'baseUrl',
+    ].map((key: keyof ShopeeConfig) => this.configService.get(key));
 
     const path = '/api/v2/auth/access_token/get';
     const timestamp = generateTimestamp();
@@ -91,17 +82,14 @@ export class TokensService extends BaseService {
       shop_id: +shopId,
     };
 
-    const url = new URL(path, this.configService.get('baseUrl'));
+    const url = new URL(path, baseUrl);
     url.search = new URLSearchParams({
       partner_id: partnerId,
       timestamp,
-      sign: generateHmac(
-        this.configService.get('partnerKey'),
-        partnerId,
-        path,
-        timestamp,
-      ),
+      sign: generateHmac(partnerKey, partnerId, path, timestamp),
     }).toString();
+
+    console.log({ url: url.toString() });
 
     const { data } = await firstValueFrom(
       this.httpService.post(url.toString(), body),
@@ -111,16 +99,20 @@ export class TokensService extends BaseService {
       throw new Error(data.error + data.message);
     }
 
-    await this.tokenRepository
-      .createQueryBuilder()
+    await TokenEntity.createQueryBuilder()
       .insert()
-      .into(TokenEntity)
       .values({
+        id: (await TokenEntity.count()).toString(),
         accessToken: data.access_token,
         refreshToken: data.refresh_token,
         expiredAt: new Date(Date.now() + +data.expire_in),
         partnerId,
+        shopId,
       })
+      .orUpdate(
+        ['accessToken', 'refreshToken', 'expiredAt', 'partnerId'],
+        ['shopId'],
+      )
       .execute();
 
     return data as { access_token: string };

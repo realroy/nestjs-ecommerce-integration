@@ -1,13 +1,13 @@
 import {
   CreateDateColumn,
   DeleteDateColumn,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
   BaseEntity as TypeOrmBaseEntity,
+  Column,
 } from 'typeorm';
 
 export abstract class BaseEntity extends TypeOrmBaseEntity {
-  @PrimaryGeneratedColumn()
+  @Column({ unique: true, primary: true })
   id: string;
 
   @CreateDateColumn()

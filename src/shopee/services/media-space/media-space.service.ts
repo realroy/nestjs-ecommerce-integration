@@ -1,27 +1,14 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import * as Sharp from 'sharp';
 import * as FormData from 'form-data';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 
-import { BaseService } from '../base/base.service';
-import { ConfigService } from '../config.service';
 import { ImageEntity } from 'src/shopee/entities';
+import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
-export class MediaSpaceService extends BaseService {
-  constructor(
-    protected readonly configService: ConfigService,
-    private readonly httpService: HttpService,
-    @InjectRepository(ImageEntity)
-    private imageRepository: Repository<ImageEntity>,
-  ) {
-    super(configService);
-  }
-
-  async uploadImage(image: Express.Multer.File) {
+export class MediaSpaceService extends TokensService {
+  async uploadImage(image: Express.Multer.File, shopId?: string) {
     const url = this.createSignedUrl('/api/v2/media_space/upload_image');
     const processedImage = await this.resizeImage(
       image.buffer,
@@ -54,8 +41,9 @@ export class MediaSpaceService extends BaseService {
 
     newImage.id = image_info?.image_id;
     newImage.data = data.response ?? {};
+    shopId ? (newImage.shopId = shopId) : null;
 
-    await this.imageRepository.create(newImage);
+    newImage.save();
 
     return newImage;
   }

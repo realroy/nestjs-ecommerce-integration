@@ -12,7 +12,6 @@ export class CallbackController {
     @Query('main_account_id') mainAccountId: string,
   ) {
     const res = await this.service.createOrUpdateShopSession(code, shopId);
-    console.log({ code, shopId, mainAccountId, res });
 
     return { message: 'success' };
   }

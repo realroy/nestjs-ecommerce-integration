@@ -13,16 +13,6 @@ import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
 export class BrandsService extends TokensService {
-  constructor(
-    protected readonly configService: ConfigService,
-    protected readonly httpService: HttpService,
-
-    @InjectRepository(TokenEntity)
-    protected tokenRepository: Repository<TokenEntity>,
-  ) {
-    super(configService, httpService, tokenRepository);
-  }
-
   async getBrands(
     shopId: number | string,
     pageSize: number | string,
