@@ -1,4 +1,4 @@
 export enum ProductItemStatus {
   Unlist = 'UNLIST',
-  Normal = 'Normal',
+  Normal = 'NORMAL',
 }

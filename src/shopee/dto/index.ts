@@ -11,3 +11,5 @@ export * from './create-tier-variation-body.dto';
 export * from './update-tier-variation-body.dto';
 export * from './authorized-request.dto';
 export * from './callback-query.dto';
+export * from './get-products-query.dto';
+export * from './register-brand.body.dto';

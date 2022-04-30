@@ -4,12 +4,34 @@ import {
   AddItemsBodyDto,
   DeleteItemBodyDto,
   UpdateItemsBodyDto,
+  GetProductsQueryDto,
 } from 'src/shopee/dto';
 import { ProductEntity } from 'src/shopee/entities';
 import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
 export class ProductsService extends TokensService {
+  async getList(dto: GetProductsQueryDto & { shopId: string }) {
+    const path = '/api/v2/product/get_list';
+    const url = await this.createSignedUrlWithAccessToken(
+      path,
+      dto.shopId.toString(),
+      {
+        shop_id: dto.shopId,
+        offset: dto.offset,
+        page_size: dto.pageSize,
+        update_time_from: dto.updateTimeFrom,
+        update_time_to: dto.updateTimeTo,
+        item_status: dto.itemStatus,
+      },
+    );
+
+    const { data } = await firstValueFrom(this.httpService.get(url));
+
+    if (data.error.length) {
+      throw new Error([data.error, data.message].join(' '));
+    }
+  }
   async addItem(dto: AddItemsBodyDto & { shopId: string }) {
     const path = '/api/v2/product/add_item';
     const url = await this.createSignedUrlWithAccessToken(

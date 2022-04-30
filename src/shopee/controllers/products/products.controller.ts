@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Patch,
   Post,
   Put,
+  Query,
   Req,
 } from '@nestjs/common';
 import {
@@ -13,11 +15,19 @@ import {
   DeleteItemBodyDto,
   UpdateItemsBodyDto,
 } from 'src/shopee/dto';
+import { GetProductsQueryDto } from 'src/shopee/dto';
 import { ProductsService } from 'src/shopee/services';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly service: ProductsService) {}
+  @Get()
+  async getList(
+    @Req() req: AuthorizedRequest,
+    @Query() query: GetProductsQueryDto,
+  ) {
+    return this.service.getList({ ...query, shopId: req.shopId });
+  }
 
   @Post()
   async create(@Req() req: AuthorizedRequest, @Body() dto: AddItemsBodyDto) {

@@ -1,12 +1,6 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
-import { TokenEntity } from 'src/shopee/entities';
-import { Repository } from 'typeorm';
 
-import { BaseService } from '../base/base.service';
-import { ConfigService } from '../config.service';
 import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()

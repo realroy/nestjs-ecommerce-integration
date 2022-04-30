@@ -1,18 +1,41 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
-import { Repository } from 'typeorm';
+import { RegisterBrandBodyDto } from 'src/shopee/dto';
 
-import { TokenEntity } from 'src/shopee/entities';
 import { GetBrandsStatusEnum } from 'src/shopee/enums';
 
-import { BaseService } from '../base/base.service';
-import { ConfigService } from '../config.service';
 import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
 export class BrandsService extends TokensService {
+  async registerBrand(dto: RegisterBrandBodyDto & { shopId: string }) {
+    const path = '/api/v2/product/register_brand';
+    const url = await this.createSignedUrlWithAccessToken(path, dto.shopId, {
+      shop_id: dto.shopId,
+    });
+
+    const body = {
+      original_brand_name: dto.originalBrandName,
+      category_list: dto.categoryList.map((category) => +category),
+      ...(dto.productImage
+        ? { product_image: dto.productImage?.imageIdList ?? [] }
+        : {}),
+      ...(dto.appLogoImageId ? { app_logo_image_id: dto.appLogoImageId } : {}),
+      ...(dto.brandWebsite ? { brand_website: dto.brandWebsite } : {}),
+      ...(dto.brandDescription
+        ? { brand_description: dto.brandDescription }
+        : {}),
+      ...(dto.additionalInformation
+        ? { additional_information: dto.additionalInformation }
+        : {}),
+      ...(dto.pcLogoImageId ? { pc_logo_image_id: dto.pcLogoImageId } : {}),
+      brand_country: dto.brandCountry,
+    };
+
+    const { data } = await firstValueFrom(this.httpService.post(url, body));
+
+    return data;
+  }
   async getBrands(
     shopId: number | string,
     pageSize: number | string,

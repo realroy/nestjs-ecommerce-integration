@@ -35,7 +35,10 @@ export class TokensService extends BaseService {
   protected async createSignedUrlWithAccessToken(
     path: string,
     shopId: string,
-    additionalParams: Record<string, string | number> = {},
+    additionalParams: Record<
+      string,
+      string | number | string[] | number[]
+    > = {},
   ) {
     const [partnerId, partnerKey, baseUrl] = [
       'partnerId',
