@@ -13,3 +13,5 @@ export * from './authorized-request.dto';
 export * from './callback-query.dto';
 export * from './get-products-query.dto';
 export * from './register-brand.body.dto';
+export * from './update-product-stocks-body-dto';
+export * from './update-product-stocks-params.dto';
