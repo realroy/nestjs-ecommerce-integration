@@ -11,3 +11,4 @@ export * from './products-size-chart/products-size-chart.controller';
 export * from './products/products.controller';
 export * from './product-tier-variations/product-tier-variations.controller';
 export * from './product-stocks/product-stocks.controller';
+export * from './product-prices/product-prices.controller';

@@ -15,3 +15,5 @@ export * from './get-products-query.dto';
 export * from './register-brand.body.dto';
 export * from './update-product-stocks-body-dto';
 export * from './update-product-stocks-params.dto';
+export * from './update-product-prices-body.dto';
+export * from './update-product-prices-params.dto';
