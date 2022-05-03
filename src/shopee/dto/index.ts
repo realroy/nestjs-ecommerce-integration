@@ -17,3 +17,6 @@ export * from './update-product-stocks-body-dto';
 export * from './update-product-stocks-params.dto';
 export * from './update-product-prices-body.dto';
 export * from './update-product-prices-params.dto';
+export * from './add-product-models-body.dto';
+export * from './add-product-models-dto';
+export * from './add-product-models-param.dto';

@@ -16,3 +16,4 @@ export * from './product-tier-variations/product-tier-variations.service';
 export * from './callback/callback.service';
 export * from './product-stocks/product-stocks.service';
 export * from './product-prices/product-prices.service';
+export * from './product-models/product-models.service';
