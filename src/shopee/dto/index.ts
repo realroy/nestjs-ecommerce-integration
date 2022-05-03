@@ -25,3 +25,5 @@ export * from './update-product-models-dto';
 export * from './update-product-models-param.dto';
 export * from './delete-product-models-param.dto';
 export * from './delete-product-models-dto';
+export * from './get-product-models-dto';
+export * from './get-product-models-param.dto';

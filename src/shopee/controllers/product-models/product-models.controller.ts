@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
@@ -21,6 +22,17 @@ import { ProductModelsService } from 'src/shopee/services';
 @Controller('products/:productId/models')
 export class ProductModelsController {
   constructor(private readonly service: ProductModelsService) {}
+
+  @Get()
+  async getList(
+    @Req() req: AuthorizedRequest,
+    @Param() param: AddProductModelsParamDto,
+  ) {
+    return this.service.getList({
+      productId: param.productId,
+      shopId: req.shopId,
+    });
+  }
 
   @Post()
   async create(

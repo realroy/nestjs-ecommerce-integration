@@ -3,6 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   AddProductModelsDto,
   DeleteProductModelsDto,
+  GetProductModelsDto,
   UpdateProductModelsDto,
 } from 'src/shopee/dto';
 
@@ -10,6 +11,22 @@ import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
 export class ProductModelsService extends TokensService {
+  async getList(dto: GetProductModelsDto) {
+    const path = '/api/v2/product/get_model_list';
+
+    const url = await this.createSignedUrlWithAccessToken(path, dto.shopId, {
+      shop_id: dto.shopId,
+    });
+
+    const body = {
+      item_id: +dto.productId,
+    };
+
+    const { data } = await firstValueFrom(this.httpService.post(url, body));
+
+    return data;
+  }
+
   async add(dto: AddProductModelsDto) {
     const path = '/api/v2/product/add_model';
 
@@ -18,7 +35,7 @@ export class ProductModelsService extends TokensService {
     });
 
     const body = {
-      item_id: dto.productId,
+      item_id: +dto.productId,
       model_list: dto.modelList.map((model) => ({
         tier_index: model.tierIndex,
         normal_stock: model.normalStock,
@@ -40,9 +57,9 @@ export class ProductModelsService extends TokensService {
     });
 
     const body = {
-      item_id: dto.productId,
+      item_id: +dto.productId,
       model: dto.model.map((eachModel) => ({
-        model_id: eachModel.modelId,
+        model_id: +eachModel.modelId,
         model_sku: eachModel.modelSku,
         ...(eachModel.preOrder
           ? {
@@ -68,8 +85,8 @@ export class ProductModelsService extends TokensService {
     });
 
     const body = {
-      item_id: dto.productId,
-      model_id: dto.modelId,
+      item_id: +dto.productId,
+      model_id: +dto.modelId,
     };
 
     const { data } = await firstValueFrom(this.httpService.post(url, body));
