@@ -13,7 +13,7 @@ import { ProductItemStatus, ProductConditionEnum } from '../enums';
 import { Attribute } from './attribute.dto';
 import { Image } from './image.dto';
 import { LogisticInfo } from './logistic-info.dto';
-import { PreOrder } from './pre-order.dto';
+import { PreOrderDto } from './pre-order.dto';
 import { ProductBrand } from './product-brand.dto';
 import { ProductComplaintPolicy } from './product-complaint-policy.dto';
 import { ProductDescriptionInfo } from './product-description-info.dto';
@@ -64,7 +64,7 @@ export class AddItemsBodyDto {
 
   @IsOptional()
   @ValidateNested()
-  preOrder?: PreOrder;
+  preOrder?: PreOrderDto;
 
   @IsOptional()
   @IsString()

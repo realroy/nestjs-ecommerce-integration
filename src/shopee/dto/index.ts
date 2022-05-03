@@ -20,3 +20,8 @@ export * from './update-product-prices-params.dto';
 export * from './add-product-models-body.dto';
 export * from './add-product-models-dto';
 export * from './add-product-models-param.dto';
+export * from './update-product-models-body.dto';
+export * from './update-product-models-dto';
+export * from './update-product-models-param.dto';
+export * from './delete-product-models-param.dto';
+export * from './delete-product-models-dto';

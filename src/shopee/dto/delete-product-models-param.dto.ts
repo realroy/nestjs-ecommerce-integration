@@ -1,6 +1,9 @@
 import { IsNumberString } from 'class-validator';
 
-export class AddProductModelsParamDto {
+export class DeleteProductModelsParamDto {
   @IsNumberString()
   productId: string;
+
+  @IsNumberString()
+  id: string;
 }

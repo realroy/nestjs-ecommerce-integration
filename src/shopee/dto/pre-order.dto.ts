@@ -1,6 +1,6 @@
 import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
 
-export class PreOrder {
+export class PreOrderDto {
   @IsBoolean()
   isPreOrder: boolean;
 

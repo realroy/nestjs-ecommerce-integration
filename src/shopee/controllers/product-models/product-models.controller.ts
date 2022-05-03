@@ -12,10 +12,13 @@ import {
   AddProductModelsBodyDto,
   AddProductModelsParamDto,
   AuthorizedRequest,
+  DeleteProductModelsParamDto,
+  UpdateProductModelsBodyDto,
+  UpdateProductModelsParamDto,
 } from 'src/shopee/dto';
 import { ProductModelsService } from 'src/shopee/services';
 
-@Controller('products/:id/models')
+@Controller('products/:productId/models')
 export class ProductModelsController {
   constructor(private readonly service: ProductModelsService) {}
 
@@ -27,7 +30,7 @@ export class ProductModelsController {
   ) {
     return this.service.add({
       ...body,
-      id: param.id,
+      productId: param.productId,
       shopId: req.shopId,
     });
   }
@@ -35,12 +38,12 @@ export class ProductModelsController {
   @Put()
   async update(
     @Req() req: AuthorizedRequest,
-    @Param() params: AddProductModelsParamDto,
-    @Body() body: AddProductModelsBodyDto,
+    @Param() params: UpdateProductModelsParamDto,
+    @Body() body: UpdateProductModelsBodyDto,
   ) {
     return this.service.update({
       ...body,
-      id: params.id,
+      productId: params.productId,
       shopId: req.shopId,
     });
   }
@@ -48,23 +51,24 @@ export class ProductModelsController {
   @Patch()
   async updatePartial(
     @Req() req: AuthorizedRequest,
-    @Param() params: AddProductModelsParamDto,
-    @Body() body: AddProductModelsBodyDto,
+    @Param() params: UpdateProductModelsParamDto,
+    @Body() body: UpdateProductModelsBodyDto,
   ) {
     return this.service.update({
       ...body,
-      id: params.id,
+      productId: params.productId,
       shopId: req.shopId,
     });
   }
 
-  @Delete()
+  @Delete(':id')
   async delete(
     @Req() req: AuthorizedRequest,
-    @Param() params: AddProductModelsParamDto,
+    @Param() params: DeleteProductModelsParamDto,
   ) {
     return this.service.remove({
-      id: params.id,
+      productId: params.productId,
+      modelId: params.id,
       shopId: req.shopId,
     });
   }
