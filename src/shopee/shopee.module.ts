@@ -15,8 +15,11 @@ import * as services from './services';
 import * as controllers from './controllers';
 import * as entities from './entities';
 import { ShopIdMiddleware } from './middlewares';
+import { RefreshTokensService } from './services/refresh-tokens/refresh-tokens.service';
 
-@Module({})
+@Module({
+  providers: [RefreshTokensService]
+})
 export class ShopeeModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
