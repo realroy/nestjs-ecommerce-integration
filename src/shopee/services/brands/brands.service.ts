@@ -16,19 +16,29 @@ export class BrandsService extends TokensService {
 
     const body = {
       original_brand_name: dto.originalBrandName,
-      category_list: dto.categoryList.map((category) => +category),
-      ...(dto.productImage
-        ? { product_image: dto.productImage?.imageIdList ?? [] }
-        : {}),
-      ...(dto.appLogoImageId ? { app_logo_image_id: dto.appLogoImageId } : {}),
-      ...(dto.brandWebsite ? { brand_website: dto.brandWebsite } : {}),
-      ...(dto.brandDescription
-        ? { brand_description: dto.brandDescription }
-        : {}),
-      ...(dto.additionalInformation
-        ? { additional_information: dto.additionalInformation }
-        : {}),
-      ...(dto.pcLogoImageId ? { pc_logo_image_id: dto.pcLogoImageId } : {}),
+
+      category_list: dto.categoryList
+        .map(Number)
+        .filter((number) => !isNaN(number)),
+
+      ...(dto?.productImage?.imageIdList && {
+        product_image: {
+          imageIdList: dto.productImage?.imageIdList,
+        },
+      }),
+
+      ...(dto.appLogoImageId && { app_logo_image_id: dto.appLogoImageId }),
+
+      ...(dto.brandWebsite && { brand_website: dto.brandWebsite }),
+
+      ...(dto.brandDescription && { brand_description: dto.brandDescription }),
+
+      ...(dto.additionalInformation && {
+        additional_information: dto.additionalInformation,
+      }),
+
+      ...(dto.pcLogoImageId && { pc_logo_image_id: dto.pcLogoImageId }),
+
       brand_country: dto.brandCountry,
     };
 
@@ -36,6 +46,7 @@ export class BrandsService extends TokensService {
 
     return data;
   }
+
   async getBrands(
     shopId: number | string,
     pageSize: number | string,

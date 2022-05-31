@@ -18,11 +18,12 @@ export class TokensService extends BaseService {
   }
 
   protected async getAccessToken(shopId: string) {
-    const token = await TokenEntity.findOneOrFail({ where: { shopId } });
-
+    const token = await TokenEntity.findOneByOrFail({ shopId });
     if (!token.isExpired) {
       return token?.accessToken;
     }
+
+    console.log('AccessToken is expired');
 
     const { access_token: accessToken } = await this.renewRefreshToken(
       shopId,
@@ -69,6 +70,7 @@ export class TokensService extends BaseService {
   }
 
   private async renewRefreshToken(shopId: string, refreshToken: string) {
+    console.log('renew refresh token');
     const [partnerId, partnerKey, baseUrl] = [
       'partnerId',
       'partnerKey',
@@ -110,8 +112,8 @@ export class TokensService extends BaseService {
         shopId,
       })
       .orUpdate(
-        ['accessToken', 'refreshToken', 'expiredAt', 'partnerId'],
-        ['shopId'],
+        ['access_token', 'refresh_token', 'expired_at', 'partner_id'],
+        ['shop_id'],
       )
       .execute();
 

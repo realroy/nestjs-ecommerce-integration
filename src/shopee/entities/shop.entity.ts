@@ -9,12 +9,15 @@ export class ShopEntity extends BaseEntity {
   @Column({ nullable: false })
   code: string;
 
-  @Column({ nullable: false })
+  @Column({ name: 'partner_id', nullable: false })
   partnerId: string;
 
   @OneToMany(() => ImageEntity, (image) => image.shop)
-  images: Promise<ImageEntity[]>;
+  images: ImageEntity[];
 
   @OneToMany(() => TokenEntity, (token) => token.shop)
-  tokens: Promise<TokenEntity[]>;
+  tokens: TokenEntity[];
+
+  @Column({ name: 'orders_sync_at' })
+  ordersSyncAt: Date;
 }

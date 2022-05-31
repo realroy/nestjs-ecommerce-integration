@@ -6,9 +6,9 @@ export class CallBackQueryDto {
 
   @IsOptional()
   @IsString()
-  shopId: string;
+  shop_id: string;
 
   @IsOptional()
   @IsString()
-  mainAccountId: string;
+  main_account_id: string;
 }

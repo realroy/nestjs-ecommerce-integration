@@ -9,7 +9,7 @@ export class CallbackController {
 
   @Get()
   async callback(@Query() query: CallBackQueryDto) {
-    await this.service.createOrUpdateShopSession(query.code, query.shopId);
+    await this.service.createOrUpdateShopSession(query.code, query.shop_id);
 
     return { message: 'success' };
   }

@@ -3,4 +3,5 @@ export type ShopeeConfig = {
   partnerKey: string;
   redirectUrl: string;
   baseUrl: string;
+  onSyncOrders?: (orders: any[]) => Promise<void>;
 };

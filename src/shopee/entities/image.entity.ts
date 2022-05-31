@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from './base.entity';
 import { ProductEntity } from './product.entity';
@@ -10,14 +10,16 @@ export class ImageEntity extends BaseEntity {
   data: any;
 
   @ManyToOne(() => ShopEntity, (shop) => shop.id)
-  shop: Promise<ShopEntity>;
+  @JoinColumn({ name: 'shop_id', referencedColumnName: 'id' })
+  shop: ShopEntity;
 
-  @Column({ nullable: true })
+  @Column({ name: 'shop_id', nullable: true })
   shopId: string;
 
   @ManyToOne(() => ProductEntity, (product) => product.id)
-  product: Promise<ProductEntity>;
+  @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
+  product: ProductEntity;
 
-  @Column({ nullable: true })
+  @Column({ name: 'product_id', nullable: true })
   productId: string;
 }

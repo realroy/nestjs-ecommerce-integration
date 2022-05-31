@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { BaseEntity } from './base.entity';
 import { ImageEntity } from './image.entity';
@@ -7,17 +7,18 @@ import { ShopEntity } from './shop.entity';
 @Entity({ name: 'shopee_product' })
 export class ProductEntity extends BaseEntity {
   @Column({ type: 'jsonb' })
-  data: any;
+  data: Record<string, any>;
 
   @Column({ unique: true, nullable: false })
   sku: string;
 
   @ManyToOne(() => ShopEntity, (shop) => shop.id)
-  shop: Promise<ShopEntity>;
+  @JoinColumn({ name: 'shop_id', referencedColumnName: 'id' })
+  shop: ShopEntity;
 
-  @Column({ nullable: false })
+  @Column({ name: 'shop_id', nullable: false })
   shopId: string;
 
   @OneToMany(() => ImageEntity, (image) => image.id, { nullable: true })
-  images: Promise<ImageEntity[]>;
+  images: ImageEntity[];
 }

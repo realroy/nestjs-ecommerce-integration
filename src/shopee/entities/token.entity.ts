@@ -1,29 +1,40 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, Raw } from 'typeorm';
 
 import { BaseEntity } from './base.entity';
 import { ShopEntity } from './shop.entity';
 
 @Entity({ name: 'shopee_token' })
 export class TokenEntity extends BaseEntity {
-  @Column({ unique: true })
+  @Column({ name: 'access_token', unique: true })
   accessToken: string;
 
-  @Column()
+  @Column({ name: 'expired_at' })
   expiredAt: Date;
 
-  @Column({ unique: true })
+  @Column({ name: 'refresh_token', unique: true })
   refreshToken: string;
 
-  @Column()
+  @Column({ name: 'partner_id' })
   partnerId: string;
 
   @ManyToOne(() => ShopEntity, (shop) => shop.id)
-  shop: Promise<ShopEntity>;
+  @JoinColumn({ name: 'shop_id', referencedColumnName: 'id' })
+  shop: ShopEntity;
 
-  @Column({ nullable: true, unique: true })
+  @Column({ name: 'shop_id', nullable: true, unique: true })
   shopId: string;
 
   get isExpired() {
-    return this.expiredAt <= new Date();
+    const now = new Date();
+    console.log({ now, expiredAt: this.expiredAt });
+    return now >= this.expiredAt;
+  }
+
+  static getActives(options?: { take: number; skip: number }) {
+    return this.find({
+      where: { expiredAt: Raw((alias) => `${alias} > NOW()`) },
+      ...(options.take && { take: options.take }),
+      ...(options.skip && { skip: options.skip }),
+    });
   }
 }

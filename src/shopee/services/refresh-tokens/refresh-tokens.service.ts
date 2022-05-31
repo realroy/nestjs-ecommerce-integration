@@ -10,7 +10,7 @@ import { generateTimestamp, generateHmac } from '../utils';
 
 @Injectable()
 export class RefreshTokensService extends TokensService {
-  @Cron('0 0 * * *', { name: 'refreshToken' })
+  // @Cron('0 0 * * *', { name: 'refreshToken' })
   async renew() {
     const [partnerId, partnerKey, baseUrl] = [
       'partnerId',

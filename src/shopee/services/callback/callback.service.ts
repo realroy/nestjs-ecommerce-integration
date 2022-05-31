@@ -11,8 +11,8 @@ export class CallbackService extends TokensService {
 
     await ShopEntity.createQueryBuilder()
       .insert()
-      .values({ id: shopId, code, partnerId })
-      .orUpdate(['code', 'partnerId'], ['id'])
+      .values({ id: shopId, code, partnerId, ordersSyncAt: new Date() })
+      .orUpdate(['code', 'partner_id', 'orders_sync_at'], ['id'])
       .execute();
 
     const path = '/api/v2/auth/token/get';
@@ -29,20 +29,20 @@ export class CallbackService extends TokensService {
     if (data.error.length) {
       throw new Error(data.error + data.message);
     }
-
+    console.log('expire_in', data.expire_in, Date.now());
     const token = await TokenEntity.createQueryBuilder()
       .insert()
       .values({
-        id: (await TokenEntity.count()).toString(),
+        id: ((await TokenEntity.count()) + 1).toString(),
         accessToken: data.access_token,
         refreshToken: data.refresh_token,
-        expiredAt: new Date(Date.now() + +data.expire_in),
+        expiredAt: new Date(Date.now() + +data.expire_in * 1_000),
         partnerId,
         shopId,
       })
       .orUpdate(
-        ['accessToken', 'refreshToken', 'expiredAt', 'partnerId'],
-        ['shopId'],
+        ['access_token', 'refresh_token', 'expired_at', 'partner_id'],
+        ['shop_id'],
       )
       .execute();
 
