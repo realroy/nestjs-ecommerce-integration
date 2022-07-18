@@ -24,7 +24,11 @@ import * as shopeeEntities from './shopee/entities';
       redirectUrl: process.env.SHOPEE_REDIRECT_BASE_URL,
       baseUrl: process.env.SHOPEE_API_BASE_URL,
     }),
-    LazadaModule,
+    LazadaModule.register({
+      appKey: process.env.LAZADA_APP_KEY,
+      appSecret: process.env.LAZADA_APP_SECRET,
+      apiEndpointUrl: process.env.apiEndpointUrl,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
