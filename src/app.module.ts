@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { dataSourceOption } from './data-source';
 import { ShopeeModule } from './shopee';
+import { LazadaModule } from './lazada/lazada.module';
 import * as shopeeEntities from './shopee/entities';
 
 @Module({
@@ -23,6 +24,7 @@ import * as shopeeEntities from './shopee/entities';
       redirectUrl: process.env.SHOPEE_REDIRECT_BASE_URL,
       baseUrl: process.env.SHOPEE_API_BASE_URL,
     }),
+    LazadaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
