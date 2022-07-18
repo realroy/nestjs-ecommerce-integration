@@ -20,14 +20,13 @@ export class ProductsService extends TokensService {
         shop_id: dto.shopId,
         offset: dto.offset,
         page_size: dto.pageSize,
-        update_time_from: dto.updateTimeFrom,
-        update_time_to: dto.updateTimeTo,
+        ...(dto.updateTimeFrom && { update_time_from: dto.updateTimeFrom }),
+        ...(dto.updateTimeTo && { update_time_to: dto.updateTimeTo }),
         item_status: dto.itemStatus,
       },
     );
 
     const { data } = await firstValueFrom(this.httpService.get(url));
-
     if (data.error.length) {
       throw new Error([data.error, data.message].join(' '));
     }
@@ -168,22 +167,23 @@ export class ProductsService extends TokensService {
       ...(dto.descriptionType && { description_type: dto.descriptionType }),
     };
 
-    console.log(body);
+    try {
+      const { data } = await firstValueFrom(this.httpService.post(url, body));
+      if (data.error.length) {
+        throw new Error([data.error, data.message].join(' '));
+      }
 
-    const { data } = await firstValueFrom(this.httpService.post(url, body));
-    console.log({ data });
-    if (data.error.length) {
-      throw new Error([data.error, data.message].join(' '));
+      const product = new ProductEntity();
+      product.id = data?.response?.item_id;
+      product.data = data?.response;
+      product.sku = data?.response?.item_sku;
+
+      await product.save();
+
+      return product;
+    } catch (error) {
+      throw new Error([error.data.error, error.data.message].join(' '));
     }
-
-    const product = new ProductEntity();
-    product.id = data?.response?.item_id;
-    product.data = data?.response;
-    product.sku = data?.response?.item_sku;
-
-    await product.save();
-
-    return product;
   }
 
   async updateItem(dto: UpdateItemsBodyDto & { shopId: string }) {
