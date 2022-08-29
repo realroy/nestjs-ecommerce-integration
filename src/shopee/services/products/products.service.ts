@@ -7,6 +7,7 @@ import {
   GetProductsQueryDto,
 } from 'src/shopee/dto';
 import { ProductEntity } from 'src/shopee/entities';
+
 import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
@@ -31,6 +32,7 @@ export class ProductsService extends TokensService {
       throw new Error([data.error, data.message].join(' '));
     }
   }
+
   async addItem(dto: AddItemsBodyDto & { shopId: string }) {
     const path = '/api/v2/product/add_item';
     const url = await this.createSignedUrlWithAccessToken(
@@ -60,23 +62,25 @@ export class ProductsService extends TokensService {
         ...(logistic.logisticId && { logistic_id: logistic.logisticId }),
         ...(logistic.isFree && { is_free: logistic.isFree }),
       })),
-      ...(dto.attributeList && {
-        attribute_list: dto.attributeList.map((attribute) => ({
-          attribute_id: attribute.attributeId,
-          ...(attribute.attributeValueList && {
-            attribute_value_list: attribute.attributeValueList.map(
-              (attributeValue) => ({
-                value_id: attributeValue.valueId,
-                ...(attributeValue.originalValueName && {
-                  original_value_name: attributeValue.originalValueName,
+      ...(dto.attributeList?.length && {
+        attribute_list: dto.attributeList?.map?.(
+          ({ attributeId, attributeValueList }) => ({
+            attribute_id: attributeId,
+            ...(attributeValueList?.length && {
+              attribute_value_list: attributeValueList?.map?.(
+                ({ valueId, originalValueName, valueUnit }) => ({
+                  value_id: valueId,
+                  ...(originalValueName && {
+                    original_value_name: originalValueName,
+                  }),
+                  ...(valueUnit && {
+                    value_unit: valueUnit,
+                  }),
                 }),
-                ...(attributeValue.valueUnit && {
-                  value_unit: attributeValue.valueUnit,
-                }),
-              }),
-            ),
+              ),
+            }),
           }),
-        })),
+        ),
       }),
       category_id: dto.categoryId,
       image: {
@@ -149,17 +153,18 @@ export class ProductsService extends TokensService {
         description_info: {
           ...(dto.descriptionInfo.extendedDescription && {
             extended_description: {
-              field_list: dto.descriptionInfo.extendedDescription.fieldList.map(
-                (field) => ({
-                  ...(field.fieldType && { field_type: field.fieldType }),
-                  ...(field.text && { text: field.text }),
-                  ...(field.imageInfo && {
-                    image_info: {
-                      image_id: field.imageInfo.imageId,
-                    },
+              field_list:
+                dto.descriptionInfo.extendedDescription.fieldList?.map?.(
+                  ({ fieldType, text, imageInfo }) => ({
+                    ...(fieldType && { field_type: fieldType }),
+                    ...(text && { text: text }),
+                    ...(imageInfo && {
+                      image_info: {
+                        image_id: imageInfo.imageId,
+                      },
+                    }),
                   }),
-                }),
-              ),
+                ) ?? [],
             },
           }),
         },
@@ -169,14 +174,17 @@ export class ProductsService extends TokensService {
 
     try {
       const { data } = await firstValueFrom(this.httpService.post(url, body));
+
       if (data.error.length) {
         throw new Error([data.error, data.message].join(' '));
       }
 
       const product = new ProductEntity();
+
       product.id = data?.response?.item_id;
       product.data = data?.response;
       product.sku = data?.response?.item_sku;
+      product.shopId = dto.shopId;
 
       await product.save();
 
