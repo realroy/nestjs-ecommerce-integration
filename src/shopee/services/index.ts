@@ -19,3 +19,4 @@ export * from './product-prices/product-prices.service';
 export * from './product-models/product-models.service';
 export * from './orders/orders.service';
 export * from './order-shipments/orders-shipment.service';
+export * from './buyer-cancellation/buyer-cancellation.service';

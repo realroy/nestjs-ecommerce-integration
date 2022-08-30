@@ -14,3 +14,4 @@ export * from './product-stocks/product-stocks.controller';
 export * from './product-prices/product-prices.controller';
 export * from './orders/orders.controller';
 export * from './order-shipments/order-shipments.controller';
+export * from './order-buyer-cancellation/order-buyer-cancellation.controller';
