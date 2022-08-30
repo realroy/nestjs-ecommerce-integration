@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
 
-import { GetOrderDetail, GetOrderListDto } from 'src/shopee/dto';
+import { CancelOrder, GetOrderDetail, GetOrderListDto } from 'src/shopee/dto';
 import { ShopEntity, TokenEntity } from 'src/shopee/entities';
-import { OrderTimeRangeFieldEnum } from 'src/shopee/enums';
+import { CancelReason, OrderTimeRangeFieldEnum } from 'src/shopee/enums';
 import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
@@ -27,9 +27,7 @@ export class OrdersService extends TokensService {
 
     const { data } = await firstValueFrom(this.httpService.get(url));
 
-    if (data?.error) {
-      throw new Error([data?.error, data?.message].join(' '));
-    }
+    this.throwIfError(data);
 
     const {
       more,
@@ -64,6 +62,27 @@ export class OrdersService extends TokensService {
     };
   }
 
+  async cancel(dto: CancelOrder) {
+    const path = '/api/v2/order/get_order_detail';
+    const url = await this.createSignedUrlWithAccessToken(path, dto.shopId);
+
+    const body = {
+      order_sn: dto.orderSn,
+      cancel_reason: dto.cancelReason,
+      ...(dto.cancelReason === CancelReason.OutOfStock &&
+        dto.itemList.map((item) => ({
+          item_id: item.itemId,
+          model_id: item.modelId,
+        }))),
+    };
+
+    const { data } = await firstValueFrom(this.httpService.post(url, body));
+
+    this.throwIfError(data);
+
+    return data;
+  }
+
   private async getDetails(dto: GetOrderDetail) {
     const path = '/api/v2/order/get_order_detail';
 
@@ -75,6 +94,8 @@ export class OrdersService extends TokensService {
     });
 
     const { data } = await firstValueFrom(this.httpService.get(url));
+
+    this.throwIfError(data);
 
     return data;
   }

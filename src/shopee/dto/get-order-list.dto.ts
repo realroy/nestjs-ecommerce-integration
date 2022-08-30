@@ -1,7 +1,8 @@
 import { IsNumberString } from 'class-validator';
-import { GetOrderListQueryDto } from './get-order-list-query.dto';
 
-export class GetOrderListDto extends GetOrderListQueryDto {
+import { GetOrderListQuery } from './get-order-list-query.dto';
+
+export class GetOrderListDto extends GetOrderListQuery {
   @IsNumberString()
   shopId: string;
 }

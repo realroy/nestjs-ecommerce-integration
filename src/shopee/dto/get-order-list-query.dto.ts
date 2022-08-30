@@ -11,7 +11,7 @@ import {
 
 import { OrderTimeRangeFieldEnum, OrderStatusEnum } from '../enums';
 
-export class GetOrderListQueryDto {
+export class GetOrderListQuery {
   @IsEnum(OrderTimeRangeFieldEnum)
   timeRangeField: OrderTimeRangeFieldEnum;
 

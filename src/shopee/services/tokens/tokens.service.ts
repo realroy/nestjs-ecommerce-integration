@@ -69,6 +69,14 @@ export class TokensService extends BaseService {
     return url.toString();
   }
 
+  protected throwIfError(data: { error?: string; message?: string }) {
+    if (data?.error?.length) {
+      throw new Error([data?.error, data?.message].join(' '));
+    }
+
+    return data;
+  }
+
   private async renewRefreshToken(shopId: string, refreshToken: string) {
     console.log('renew refresh token');
     const [partnerId, partnerKey, baseUrl] = [
