@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Req } from '@nestjs/common';
 
-import { AuthorizedRequest } from 'src/shopee/dto';
+import { AuthorizedRequest, GetOrderDetailQuery } from 'src/shopee/dto';
 import { GetOrderListQueryDto } from 'src/shopee/dto/get-order-list-query.dto';
 import { OrdersService } from 'src/shopee/services';
 

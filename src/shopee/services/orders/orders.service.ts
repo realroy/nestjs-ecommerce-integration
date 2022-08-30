@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
 
-import { GetOrderListDto } from 'src/shopee/dto';
+import { GetOrderDetail, GetOrderListDto } from 'src/shopee/dto';
 import { ShopEntity, TokenEntity } from 'src/shopee/entities';
 import { OrderTimeRangeFieldEnum } from 'src/shopee/enums';
 import { TokensService } from '../tokens/tokens.service';
@@ -37,11 +37,46 @@ export class OrdersService extends TokensService {
       order_list: orderList,
     } = data.response;
 
+    if (!orderList.length) {
+      return {
+        more,
+        nextCursor,
+        orders: [],
+      };
+    }
+
+    const detailResponse = await this.getDetails({
+      shopId: dto.shopId,
+      orderSnList: orderList?.map?.(({ order_sn: orderSn }) => orderSn),
+    });
+
+    const orders = orderList.map((order) => ({
+      ...order,
+      ...detailResponse.find(
+        (orderDetail) => orderDetail.order_sn === order.order_sn,
+      ),
+    }));
+
     return {
       more,
       nextCursor,
-      orderList,
+      orders,
     };
+  }
+
+  private async getDetails(dto: GetOrderDetail) {
+    const path = '/api/v2/order/get_order_detail';
+
+    const url = await this.createSignedUrlWithAccessToken(path, dto.shopId, {
+      order_sn_list: dto.orderSnList,
+      ...(dto.responseOptionalFields.length && {
+        response_optional_fields: dto.responseOptionalFields,
+      }),
+    });
+
+    const { data } = await firstValueFrom(this.httpService.get(url));
+
+    return data;
   }
 
   private get activeTokenGenerator() {

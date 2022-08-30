@@ -30,3 +30,5 @@ export * from './get-product-models-param.dto';
 export * from './get-order-list.dto';
 export * from './get-order-shipment-list.dto';
 export * from './get-order-shipment-list-query.dto';
+export * from './get-order-detail-query.dto';
+export * from './get-order-detail.dto';
