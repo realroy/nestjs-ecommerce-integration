@@ -28,3 +28,5 @@ export * from './delete-product-models-dto';
 export * from './get-product-models-dto';
 export * from './get-product-models-param.dto';
 export * from './get-order-list.dto';
+export * from './get-order-shipment-list.dto';
+export * from './get-order-shipment-list-query.dto';

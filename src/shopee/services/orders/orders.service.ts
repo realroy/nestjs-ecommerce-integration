@@ -15,8 +15,8 @@ export class OrdersService extends TokensService {
     const url = await this.createSignedUrlWithAccessToken(path, dto.shopId, {
       shop_id: dto.shopId,
       time_range_field: dto.timeRangeField,
-      time_from: dto.timeTo.getTime(),
-      time_to: dto.timeTo.getTime(),
+      time_from: dto.timeFrom,
+      time_to: dto.timeTo,
       page_size: dto.pageSize,
       ...(dto.cursor && { cursor: dto.cursor }),
       ...(dto.orderStatus && { order_status: dto.orderStatus }),
@@ -27,7 +27,21 @@ export class OrdersService extends TokensService {
 
     const { data } = await firstValueFrom(this.httpService.get(url));
 
-    return data;
+    if (data?.error) {
+      throw new Error([data?.error, data?.message].join(' '));
+    }
+
+    const {
+      more,
+      next_cursor: nextCursor,
+      order_list: orderList,
+    } = data.response;
+
+    return {
+      more,
+      nextCursor,
+      orderList,
+    };
   }
 
   private get activeTokenGenerator() {

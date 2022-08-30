@@ -12,3 +12,5 @@ export * from './products/products.controller';
 export * from './product-tier-variations/product-tier-variations.controller';
 export * from './product-stocks/product-stocks.controller';
 export * from './product-prices/product-prices.controller';
+export * from './orders/orders.controller';
+export * from './order-shipments/order-shipments.controller';

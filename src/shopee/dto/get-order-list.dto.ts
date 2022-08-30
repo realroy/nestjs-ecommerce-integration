@@ -1,33 +1,7 @@
-import {
-  IsDate,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
-import { OrderTimeRangeFieldEnum, OrderStatusEnum } from '../enums';
+import { IsNumberString } from 'class-validator';
+import { GetOrderListQueryDto } from './get-order-list-query.dto';
 
-export class GetOrderListDto {
-  @IsEnum(OrderTimeRangeFieldEnum)
-  timeRangeField: OrderTimeRangeFieldEnum;
-
-  @IsDate()
-  timeFrom: Date;
-
-  @IsDate()
-  timeTo: Date;
-
-  @IsNumber()
-  pageSize: number;
-
-  @IsOptional()
-  @IsString()
-  cursor?: string;
-
-  @IsOptional()
-  @IsEnum(OrderStatusEnum)
-  orderStatus?: OrderStatusEnum;
-
-  @IsOptional()
-  responseOptionalFields?: string;
+export class GetOrderListDto extends GetOrderListQueryDto {
+  @IsNumberString()
+  shopId: string;
 }
