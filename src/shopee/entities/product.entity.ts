@@ -1,11 +1,14 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import ENTITY_NAMES from '../constants/entities';
 
 import { BaseEntity } from './base.entity';
 import { ImageEntity } from './image.entity';
 import { ShopEntity } from './shop.entity';
 
-@Entity({ name: 'shopee_product' })
+@Entity({ name: ENTITY_NAMES.PRODUCTS })
 export class ProductEntity extends BaseEntity {
+  static NAME = ENTITY_NAMES.PRODUCTS;
+
   @Column({ type: 'jsonb' })
   data: Record<string, any>;
 

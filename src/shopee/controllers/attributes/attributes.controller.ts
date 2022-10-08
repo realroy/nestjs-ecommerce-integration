@@ -18,7 +18,6 @@ export class AttributesController {
     const { shopId } = req;
 
     const accessToken = await this.tokenService.getAccessToken(shopId);
-
     const result = await this.attributeService.getAttributes(
       shopId,
       query.categoryId,

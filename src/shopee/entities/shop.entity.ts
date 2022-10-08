@@ -1,12 +1,15 @@
 import { Column, Entity, OneToMany } from 'typeorm';
+import ENTITY_NAMES from '../constants/entities';
 
 import { BaseEntity } from './base.entity';
 import { ImageEntity } from './image.entity';
 import { OrderSynchronizationEntity } from './order-synchronization.entity';
 import { TokenEntity } from './token.entity';
 
-@Entity({ name: 'shopee_shop' })
+@Entity({ name: ENTITY_NAMES.SHOPS })
 export class ShopEntity extends BaseEntity {
+  static NAME = ENTITY_NAMES.SHOPS;
+
   @Column({ nullable: true })
   code: string | null;
 

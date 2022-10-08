@@ -34,9 +34,7 @@ export class RenewRefreshTokenService {
       shop_id: +shopId,
     };
 
-    const firstValue = await firstValueFrom(
-      this.httpClient.post(url.toString(), body),
-    );
+    const firstValue = await this.httpClient.post(url.toString(), body);
 
     const data = firstValue.data as unknown as GetAccessTokenResponse;
 

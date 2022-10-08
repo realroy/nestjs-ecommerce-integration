@@ -7,6 +7,8 @@ import {
 } from 'typeorm';
 
 export abstract class BaseEntity extends TypeOrmBaseEntity {
+  static NAME: string | undefined = undefined;
+
   @Column({ unique: true, primary: true })
   id: string;
 

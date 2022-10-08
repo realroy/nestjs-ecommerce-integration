@@ -1,10 +1,12 @@
 import { Column, Entity, JoinColumn, ManyToOne, Raw } from 'typeorm';
+import ENTITY_NAMES from '../constants/entities';
 
 import { BaseEntity } from './base.entity';
 import { ShopEntity } from './shop.entity';
-
-@Entity({ name: 'shopee_token' })
+@Entity({ name: ENTITY_NAMES.TOKENS })
 export class TokenEntity extends BaseEntity {
+  static NAME = ENTITY_NAMES.TOKENS;
+
   @Column({ name: 'access_token', unique: true })
   accessToken: string;
 

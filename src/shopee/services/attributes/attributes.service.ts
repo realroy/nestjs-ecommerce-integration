@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { firstValueFrom } from 'rxjs';
 
 import { CreateSignedUrl, HttpClient } from 'src/shopee/libs';
 
@@ -14,13 +13,12 @@ export class AttributesService {
     const path = '/api/v2/product/get_attributes';
 
     const url = this.createSignedUrl.call(path, {
-      accessToken,
       category_id: categoryId,
+      access_token: accessToken,
       shop_id: shopId,
     });
 
-    const { data } = await firstValueFrom(this.httpClient.get(url));
-
-    return data;
+    const res = await this.httpClient.get(url);
+    return res.data;
   }
 }

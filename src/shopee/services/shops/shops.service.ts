@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ShopEntity } from 'src/shopee/entities';
+import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+
+import { ShopEntity } from 'src/shopee/entities';
+
 import { LogisticsChannelsService } from '../logistics-channels/logistics-channels.service';
+import { REPOSITORY } from 'src/shopee/constants';
 
 @Injectable()
 export class ShopsService {
   constructor(
-    @InjectRepository(ShopEntity)
+    @Inject(REPOSITORY.SHOPS)
     private shopRepository: Repository<ShopEntity>,
     private logisticsChannelService: LogisticsChannelsService,
   ) {}
