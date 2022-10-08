@@ -14,12 +14,12 @@ export class ImageEntity extends BaseEntity {
   shop: ShopEntity;
 
   @Column({ name: 'shop_id', nullable: true })
-  shopId: string;
+  shopId: string | null;
 
   @ManyToOne(() => ProductEntity, (product) => product.id)
   @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
   product: ProductEntity;
 
   @Column({ name: 'product_id', nullable: true })
-  productId: string;
+  productId: string | null;
 }

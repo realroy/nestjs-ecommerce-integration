@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ShopEntity } from 'src/shopee/entities';
 
 import { ConfigService } from '../config.service';
 import { generateHmac, generateTimestamp } from '../utils';
@@ -7,57 +8,56 @@ import { generateHmac, generateTimestamp } from '../utils';
 export class AuthPartnerService {
   constructor(private readonly configService: ConfigService) {}
 
-  getAuthPartnerUrl() {
-    const authPartnerPath = '/api/v2/shop/auth_partner';
+  async getAuthPartnerUrl(shopId: string) {
+    const url = this.getUrl('/api/v2/shop/auth_partner');
 
-    const authPartnerUrl = new URL(
-      authPartnerPath,
-      this.configService.get('baseUrl'),
-    );
+    console.log({ url });
 
-    const timestamp = generateTimestamp();
+    await ShopEntity.createQueryBuilder()
+      .insert()
+      .values({
+        id: shopId,
+        partnerId: url.searchParams.get('partner_id'),
+        signData: url.searchParams.get('sign'),
+      })
+      .orUpdate(['partner_id', 'signData'], ['id'])
+      .execute();
 
-    const sign = generateHmac(
-      this.configService.get('partnerKey'),
-      this.configService.get('partnerId'),
-      authPartnerPath,
-      timestamp,
-    );
-
-    authPartnerUrl.search = new URLSearchParams({
-      partner_id: this.configService.get('partnerId'),
-      timestamp,
-      sign,
-      redirect: `${this.configService.get('redirectUrl')}/callback`,
-    }).toString();
-
-    return authPartnerUrl.toString();
+    return url.toString();
   }
 
-  getCancelAuthPartnerUrl() {
-    const authPartnerPath = '/api/v2/shop/cancel_auth_partner';
+  async getCancelAuthPartnerUrl(shopId: string) {
+    const url = this.getUrl('/api/v2/shop/cancel_auth_partner');
 
-    const authPartnerUrl = new URL(
-      authPartnerPath,
-      this.configService.get('baseUrl'),
-    );
+    await ShopEntity.delete({ id: shopId });
+
+    return url.toString();
+  }
+
+  private getUrl(pathName: string) {
+    const url = new URL(pathName, this.configService.get('baseUrl'));
+    const partnerId = this.configService.get('partnerId');
 
     const timestamp = generateTimestamp();
 
     const sign = generateHmac(
       this.configService.get('partnerKey'),
-      this.configService.get('partnerId'),
-      authPartnerPath,
+      partnerId,
+      pathName,
       timestamp,
     );
 
-    authPartnerUrl.search = new URLSearchParams({
-      partner_id: this.configService.get('partnerId'),
-      timestamp,
-      sign,
-      redirect: `${this.configService.get('redirectUrl')}/callback`,
-    }).toString();
+    const redirectUrl = new URL(
+      'callback',
+      this.configService.get('redirectUrl'),
+    );
 
-    return authPartnerUrl.toString();
+    redirectUrl.searchParams.append('sign', sign);
+    url.searchParams.set('partner_id', partnerId);
+    url.searchParams.set('redirect', redirectUrl.toString());
+    url.searchParams.set('timestamp', timestamp);
+    url.searchParams.set('sign', sign);
+
+    return url;
   }
 }

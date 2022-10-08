@@ -24,7 +24,7 @@ export class BaseService {
         partnerId,
         path,
         timestamp,
-        ...Object.values(additionalParams),
+        ...(Object.values(additionalParams) as string[]),
       ),
     }).toString();
 

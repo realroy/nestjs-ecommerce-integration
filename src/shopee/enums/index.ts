@@ -8,3 +8,4 @@ export * from './order-time-range-field.enum';
 export * from './order-status.enum';
 export * from './cancel-reason.enum';
 export * from './buyer-cancellation-operation.enum';
+export * from './order-synchronization.enum';

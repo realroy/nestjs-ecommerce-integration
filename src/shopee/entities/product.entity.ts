@@ -9,16 +9,16 @@ export class ProductEntity extends BaseEntity {
   @Column({ type: 'jsonb' })
   data: Record<string, any>;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ unique: true })
   sku: string;
 
   @ManyToOne(() => ShopEntity, (shop) => shop.id)
   @JoinColumn({ name: 'shop_id', referencedColumnName: 'id' })
   shop: ShopEntity;
 
-  @Column({ name: 'shop_id', nullable: false })
+  @Column({ name: 'shop_id' })
   shopId: string;
 
-  @OneToMany(() => ImageEntity, (image) => image.id, { nullable: true })
+  @OneToMany(() => ImageEntity, (image) => image.id)
   images: ImageEntity[];
 }

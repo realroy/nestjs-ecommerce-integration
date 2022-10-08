@@ -1,18 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { TokensService } from '../tokens/tokens.service';
+
+import { CreateSignedUrl, HttpClient } from 'src/shopee/libs';
 
 @Injectable()
-export class AttributesService extends TokensService {
-  async getAttributes(shopId: string, categoryId: string) {
+export class AttributesService {
+  constructor(
+    private readonly createSignedUrl: CreateSignedUrl,
+    private readonly httpClient: HttpClient,
+  ) {}
+
+  async getAttributes(shopId: string, categoryId: string, accessToken: string) {
     const path = '/api/v2/product/get_attributes';
 
-    const url = await this.createSignedUrlWithAccessToken(path, shopId, {
+    const url = this.createSignedUrl.call(path, {
+      accessToken,
       category_id: categoryId,
       shop_id: shopId,
     });
 
-    const { data } = await firstValueFrom(this.httpService.get(url));
+    const { data } = await firstValueFrom(this.httpClient.get(url));
 
     return data;
   }

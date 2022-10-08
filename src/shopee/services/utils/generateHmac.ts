@@ -1,10 +1,9 @@
 import { createHmac } from 'crypto';
 
-export function generateHmac(key: string, ...data: (string | number)[]) {
+export default function generateHmac(key: string, ...data: string[]) {
   const hmac = createHmac('sha256', key);
-  data.forEach((s: string | number) =>
-    !!s ? hmac.update(s.toString()) : null,
-  );
+
+  data.forEach((s: string) => (!!s ? hmac.update(s) : null));
 
   return hmac.digest('hex');
 }

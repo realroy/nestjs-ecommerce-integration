@@ -38,3 +38,5 @@ export * from './cancel-order-param.dto';
 export * from './cancel-order.dto';
 export * from './create-buyer-cancellation-body.dto';
 export * from './create-buyer-cancellation.dto';
+export { default as GetAccessTokenResponse } from './get-access-token-response.dto';
+export * from './auth-partner-body.dto';

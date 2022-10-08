@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Delete, Post, Req } from '@nestjs/common';
+import { AuthorizedRequest } from 'src/shopee/dto';
 
 import { AuthPartnerService } from 'src/shopee/services';
 
@@ -6,16 +7,16 @@ import { AuthPartnerService } from 'src/shopee/services';
 export class AuthPartnerController {
   constructor(private readonly service: AuthPartnerService) {}
 
-  @Get()
-  async authPartner() {
-    const url = this.service.getAuthPartnerUrl();
+  @Post()
+  async authPartner(@Req() req: AuthorizedRequest) {
+    const url = await this.service.getAuthPartnerUrl(req.shopId);
 
     return { url };
   }
 
-  @Get('cancel')
-  async cancelAuthPartner() {
-    const url = this.service.getCancelAuthPartnerUrl();
+  @Delete('cancel')
+  async cancelAuthPartner(@Req() req: AuthorizedRequest) {
+    const url = await this.service.getCancelAuthPartnerUrl(req.shopId);
 
     return { url };
   }

@@ -17,7 +17,7 @@ export class TokensService extends BaseService {
     super(configService);
   }
 
-  protected async getAccessToken(shopId: string) {
+  async getAccessToken(shopId: string) {
     const token = await TokenEntity.findOneByOrFail({ shopId });
     if (!token.isExpired) {
       return token?.accessToken;

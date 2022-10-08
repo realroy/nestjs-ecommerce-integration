@@ -20,3 +20,4 @@ export * from './product-models/product-models.service';
 export * from './orders/orders.service';
 export * from './order-shipments/orders-shipment.service';
 export * from './buyer-cancellation/buyer-cancellation.service';
+export { default as FindAccessTokenService } from './find-access-token/find-access-token.service';

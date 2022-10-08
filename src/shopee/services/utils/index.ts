@@ -1,2 +1,2 @@
-export * from './generateHmac';
-export * from './generateTimeStamp';
+export { default as generateHmac } from './generateHmac';
+export { default as generateTimestamp } from './generateTimestamp';
