@@ -14,6 +14,7 @@ import { ShopeeConfig } from './shopee.config';
 import * as services from './services';
 import * as controllers from './controllers';
 import * as entities from './entities';
+import * as libs from './libs';
 import { ShopIdMiddleware } from './middlewares';
 
 @Module({})
@@ -21,10 +22,7 @@ export class ShopeeModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(ShopIdMiddleware)
-      .exclude(
-        { path: '/auth-partner', method: RequestMethod.ALL },
-        { path: '/callback', method: RequestMethod.ALL },
-      )
+      .exclude({ path: '/callback', method: RequestMethod.ALL })
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 
@@ -45,6 +43,7 @@ export class ShopeeModule implements NestModule {
           useClass: ValidationPipe,
         },
         ...Object.values(services),
+        ...Object.values(libs),
       ],
       controllers: [...Object.values(controllers)],
     };
