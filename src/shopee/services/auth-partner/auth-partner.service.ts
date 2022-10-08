@@ -11,8 +11,6 @@ export class AuthPartnerService {
   async getAuthPartnerUrl(shopId: string) {
     const url = this.getUrl('/api/v2/shop/auth_partner');
 
-    console.log({ url });
-
     await ShopEntity.createQueryBuilder()
       .insert()
       .values({
