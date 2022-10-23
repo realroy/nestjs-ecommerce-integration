@@ -26,7 +26,6 @@ export class CallbackService {
         const partnerId = this.config.get('partnerId');
         const shop = await manager.findOneByOrFail(ShopEntity, {
           id: shopId,
-          partnerId,
           signData: sign,
         });
 

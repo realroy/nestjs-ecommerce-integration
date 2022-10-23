@@ -16,7 +16,9 @@ export async function wrapTypeormTransaction<T>({
   execute,
 }: WrapTypeormTransactionArguments<T>) {
   try {
-    await queryRunner.connect();
+    if (!queryRunner.connection.isInitialized) {
+      await queryRunner.connect();
+    }
     await queryRunner.startTransaction();
 
     const response = await execute(queryRunner.manager);

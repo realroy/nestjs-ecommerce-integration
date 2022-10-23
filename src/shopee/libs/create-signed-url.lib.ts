@@ -28,8 +28,8 @@ export default class CreateSignedUrl {
     url.search = new URLSearchParams({
       partner_id: partnerId,
       timestamp,
-      ...(parsedParams.access_token && {
-        access_token: parsedParams.access_token,
+      ...(parsedParams?.access_token && {
+        access_token: parsedParams?.access_token,
       }),
       ...parsedParams,
       sign: generateHmac(
@@ -37,10 +37,12 @@ export default class CreateSignedUrl {
         partnerId,
         path,
         timestamp,
-        ...(parsedParams.access_token && [parsedParams.access_token]),
-        ...(parsedParams.shop_id && [parsedParams.shop_id]),
+        ...(parsedParams?.access_token ? [parsedParams?.access_token] : []),
+        ...(parsedParams?.shop_id ? [parsedParams?.shop_id] : []),
       ),
     }).toString();
+
+    console.log({ url });
 
     return url.toString();
   }

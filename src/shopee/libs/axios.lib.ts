@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import Axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 
 @Injectable()
@@ -13,7 +12,7 @@ export default class HttpClient {
       (value) => {
         this.#logger.log(`[${value.method.toUpperCase()}] ${value.url}`);
         if (value.data) {
-          this.#logger.log(`body: ${JSON.stringify(value.data, null, 4)}`);
+          this.#logger.log(`[Body]: ${JSON.stringify(value.data, null, 4)}`);
         }
 
         return value;
